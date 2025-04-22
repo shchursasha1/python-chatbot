@@ -1,18 +1,11 @@
-from ollama import chat, ChatResponse
+from src.interfaces.interfaces import LLMClientProtocol
 
-class LLMClient:
-    """LLM client for generating responses using OpenAI API."""
-    def __init__(self, model="gemma3"):
-        self.model = model
+class LLMClient(LLMClientProtocol):
+    """
+    LLM client facade. Delegates all LLM calls to an injected backend (Ollama, OpenAI, etc).
+    """
+    def __init__(self, backend: LLMClientProtocol):
+        self.backend = backend
 
     def generate_response(self, prompt: str) -> str:
-        try:
-            response: ChatResponse = chat(model=self.model, messages=[
-                {
-                    'role': 'user',
-                    'content': prompt,
-                },
-            ])
-            return response['message']['content']
-        except Exception as e:
-            return f"Raised exception: {e}"
+        return self.backend.generate_response(prompt)
