@@ -1,4 +1,4 @@
-from config.prompts import PROMPT_TEMPLATES
+from src.config.prompts import PROMPT_TEMPLATES
 
 class BaseAgent:
     def __init__(self, name, role_description, llm_client):

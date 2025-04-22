@@ -1,41 +1,34 @@
+from src.utils.input_sanitizer import sanitize_input
+from src.config.prompts import agent_selector_prompt
+
 class AgentSelector:
-    def __init__(self, agents):
+    """
+    Agent selector class that uses LLM to route user questions to the most appropriate specialized agent.
+    """
+    def __init__(self, agents, llm_client):
         self.agents = agents
+        self.llm_client = llm_client
         self.last_agent = None
 
     def select_agent(self, user_input):
-        lowered = user_input.lower()
-        if "@sentinel" in lowered:
+        lowered_input = sanitize_input(user_input.lower())
+
+        if "@sentinel" in lowered_input:
             agent = self.agents['sentinel']
-        elif "@finguide" in lowered:
+        elif "@finguide" in lowered_input:
             agent = self.agents['finguide']
-        elif "@edubot" in lowered:
+        elif "@edubot" in lowered_input:
             agent = self.agents['edubot']
         else:
-            # Professional: Advanced heuristic for agent selection
-            security_words = [
-                "protect", "secure", "phishing", "password", "cyber", "safety", "hack", "breach", "fraud",
-                "attack", "malware", "scam", "theft", "privacy", "compromise"
-            ]
-            finance_words = [
-                "budget", "finance", "cost", "expense", "money", "investment", "invest", "loan", "credit", "debt",
-                "tax", "income", "salary", "purchase", "price", "spend", "save", "saving", "fund", "bank", "profit",
-                "loss", "account", "insurance", "mortgage", "dividend", "stock", "bond", "asset", "liability",
-                "capital", "payment", "bill", "wealth", "economics", "economic", "financial", "card", "statement", "transaction", "transfer"
-            ]
-            # Якщо є security-слово + фінансовий об'єкт — це security-кейс (Sentinel)
-            has_security = any(word in lowered for word in security_words)
-            has_finance = any(word in lowered for word in finance_words)
-            # Додатково: якщо є security-слово і фінансовий тригер в одному питанні
-            finance_triggers = ["account", "bank", "finance", "credit", "card", "statement", "payment", "transaction", "transfer"]
-            has_finance_trigger = any(word in lowered for word in finance_triggers)
-            if has_security and has_finance_trigger:
+            prompt = agent_selector_prompt.format(lowered_input=lowered_input)
+            agent_name = self.llm_client.generate_response(prompt).strip()
+            agent_key = agent_name.lower()
+
+            if agent_key == 'sentinel':
                 agent = self.agents['sentinel']
-            elif has_security:
-                agent = self.agents['sentinel']
-            elif has_finance:
+            elif agent_key == 'finguide':
                 agent = self.agents['finguide']
-            elif any(word in lowered for word in ["explain", "teach", "learn"]):
+            elif agent_key == 'edubot':
                 agent = self.agents['edubot']
             else:
                 agent = self.last_agent or self.agents['edubot']
