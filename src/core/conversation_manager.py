@@ -1,8 +1,11 @@
-from data.conversation_buffer import ConversationBuffer
+from src.data.conversation_buffer import ConversationBuffer
 
 class ConversationManager:
-    def __init__(self, buffer_size=5):
-        self.buffer = ConversationBuffer(buffer_size=buffer_size)
+    """
+    Conversation manager class that handles the conversation buffer and manages the conversation flow.
+    """
+    def __init__(self, max_tokens=512):
+        self.buffer = ConversationBuffer(max_tokens=max_tokens)
 
     def add_message(self, role, message):
         self.buffer.add_message(role, message)

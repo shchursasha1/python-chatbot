@@ -1,22 +1,24 @@
-from agents.sentinel import Sentinel
-from agents.findguie import FinGuide
-from agents.edubot import EduBot
-from llm.llm_client import LLMClient
-from logic.conversation_manager import ConversationManager
-from logic.agent_selector import AgentSelector
-from interfaces.console_ui import ConsoleUI
-from interfaces.logger import Logger
+import time
+from src.agents.sentinel import Sentinel
+from src.agents.finguide import FinGuide
+from src.agents.edubot import EduBot
+from src.llm.llm_client import LLMClient
+from src.llm.ollama import OllamaClient
+from src.core.conversation_manager import ConversationManager
+from src.core.agent_selector import AgentSelector
+from src.ui.console_ui import ConsoleUI
+from src.utils.logger import Logger
 
 
 def main():
-    llm_client = LLMClient()
+    llm_client = LLMClient(backend=OllamaClient())
     agents = {
         'sentinel': Sentinel(llm_client),
         'finguide': FinGuide(llm_client),
         'edubot': EduBot(llm_client)
     }
-    agent_selector = AgentSelector(agents)
-    conversation_manager = ConversationManager(buffer_size=5)
+    agent_selector = AgentSelector(agents, llm_client)
+    conversation_manager = ConversationManager(max_tokens=512)
     ui = ConsoleUI()
     logger = Logger()
 
@@ -40,18 +42,15 @@ def main():
 
         conversation_manager.add_message('User', user_input)
         context = conversation_manager.get_context()
-        # Якщо юзер просить історію або список питань, додати їх у context
-        if any(
-            kw in user_input.lower() for kw in [
-                "what were my question", "list of my questions", "questions in this chat", "chat history", "conversation history", "what did i ask", "show my questions", "provide me with chat history"]):
-            user_questions = conversation_manager.get_user_questions()
-            if user_questions:
-                questions_block = "\n".join(f"{i+1}. {q}" for i, q in enumerate(user_questions))
-                context += f"\nUser questions so far:\n{questions_block}"
+
+        start_time = time.time()
         response = agent.generate_response(user_input, context)
+        end_time = time.time()
+        logger.record_response_time(start_time, end_time)
+
         conversation_manager.add_message(agent.name, response)
         
-        ui.display(f"{agent.name}: {response}")
+        ui.display(response)
         logger.log('User', user_input)
         logger.log(agent.name, response)
 
