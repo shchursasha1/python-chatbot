@@ -1,3 +1,4 @@
+import time
 from src.agents.sentinel import Sentinel
 from src.agents.finguide import FinGuide
 from src.agents.edubot import EduBot
@@ -42,14 +43,11 @@ def main():
         conversation_manager.add_message('User', user_input)
         context = conversation_manager.get_context()
 
-        if any(
-            kw in user_input.lower() for kw in [
-                "what were my question", "list of my questions", "questions in this chat", "chat history", "conversation history", "what did i ask", "show my questions", "provide me with chat history"]):
-            user_questions = conversation_manager.get_user_questions()
-            if user_questions:
-                questions_block = "\n".join(f"{i+1}. {q}" for i, q in enumerate(user_questions))
-                context += f"\nUser questions so far:\n{questions_block}"
+        start_time = time.time()
         response = agent.generate_response(user_input, context)
+        end_time = time.time()
+        logger.record_response_time(start_time, end_time)
+        
         conversation_manager.add_message(agent.name, response)
         
         ui.display(response)
