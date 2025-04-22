@@ -16,7 +16,7 @@ def main():
         'edubot': EduBot(llm_client)
     }
     agent_selector = AgentSelector(agents, llm_client)
-    conversation_manager = ConversationManager(buffer_size=5)
+    conversation_manager = ConversationManager(max_tokens=512)
     ui = ConsoleUI()
     logger = Logger()
 
