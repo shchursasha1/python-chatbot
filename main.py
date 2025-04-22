@@ -47,7 +47,7 @@ def main():
         response = agent.generate_response(user_input, context)
         end_time = time.time()
         logger.record_response_time(start_time, end_time)
-        
+
         conversation_manager.add_message(agent.name, response)
         
         ui.display(response)

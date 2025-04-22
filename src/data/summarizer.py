@@ -1,7 +1,8 @@
 from src.utils.logger import Logger
+from src.interfaces.interfaces import SummarizerProtocol
 from src.config.prompts import summarizer_prompt
 
-class Summarizer:
+class Summarizer(SummarizerProtocol):
     """Class for summarizing conversation history."""
     def __init__(self, llm_client=None, logger=None):
         self.llm_client = llm_client
