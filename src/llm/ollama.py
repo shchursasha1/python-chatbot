@@ -11,7 +11,7 @@ class OllamaClient(LLMClientProtocol):
 
     def generate_response(self, messages) -> str:
         """
-        Generates a response using a list of messages (system, few-shot, context, user) in OpenAI/Ollama format.
+        Generates a response using a list of messages (system, few-shot, context, user).
         """
         try:
             response: ChatResponse = chat(model=self.model, messages=messages)

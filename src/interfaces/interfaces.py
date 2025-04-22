@@ -9,7 +9,7 @@ class LLMClientProtocol(ABC):
 
 class SummarizerProtocol(ABC):
     @abstractmethod
-    def summarize(self, conversation: list) -> str:
+    def summarize(self, messages: list) -> str:
         pass
 
 class LoggerProtocol(ABC):
