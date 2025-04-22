@@ -1,4 +1,4 @@
-from .base_agent import BaseAgent
+from src.agents.base_agent import BaseAgent
 
 class FinGuide(BaseAgent):
     def __init__(self, llm_client):

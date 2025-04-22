@@ -1,11 +1,11 @@
-from agents.sentinel import Sentinel
-from agents.findguie import FinGuide
-from agents.edubot import EduBot
-from llm.llm_client import LLMClient
-from logic.conversation_manager import ConversationManager
-from logic.agent_selector import AgentSelector
-from interfaces.console_ui import ConsoleUI
-from interfaces.logger import Logger
+from src.agents.sentinel import Sentinel
+from src.agents.finguide import FinGuide
+from src.agents.edubot import EduBot
+from src.llm.llm_client import LLMClient
+from src.core.conversation_manager import ConversationManager
+from src.core.agent_selector import AgentSelector
+from src.interfaces.console_ui import ConsoleUI
+from src.interfaces.logger import Logger
 
 
 def main():
@@ -15,7 +15,7 @@ def main():
         'finguide': FinGuide(llm_client),
         'edubot': EduBot(llm_client)
     }
-    agent_selector = AgentSelector(agents)
+    agent_selector = AgentSelector(agents, llm_client)
     conversation_manager = ConversationManager(buffer_size=5)
     ui = ConsoleUI()
     logger = Logger()
@@ -40,7 +40,7 @@ def main():
 
         conversation_manager.add_message('User', user_input)
         context = conversation_manager.get_context()
-        # Якщо юзер просить історію або список питань, додати їх у context
+
         if any(
             kw in user_input.lower() for kw in [
                 "what were my question", "list of my questions", "questions in this chat", "chat history", "conversation history", "what did i ask", "show my questions", "provide me with chat history"]):

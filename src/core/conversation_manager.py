@@ -1,4 +1,4 @@
-from data.conversation_buffer import ConversationBuffer
+from src.data.conversation_buffer import ConversationBuffer
 
 class ConversationManager:
     def __init__(self, buffer_size=5):
