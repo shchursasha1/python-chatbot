@@ -50,7 +50,8 @@ agent_selector_prompt = (
             )
 
 summarizer_prompt = (
-            "Summarize the following chat history in 1-2 sentences, preserving all key facts, questions, and decisions. "
+            "You are an expert summarizer who always keeps the context of the conversation in the most concise way.\n"
+            "Summarize the following chat history in 1-2 sentences, preserving all key facts, questions, and decisions.\n"
             "Focus on clarity, avoid repetition, and do not add information that is not present.\n"
             "Chat history:\n{chat_text}\nSummary:"
         )
