@@ -2,14 +2,15 @@ from src.agents.sentinel import Sentinel
 from src.agents.finguide import FinGuide
 from src.agents.edubot import EduBot
 from src.llm.llm_client import LLMClient
+from src.llm.ollama import OllamaClient
 from src.core.conversation_manager import ConversationManager
 from src.core.agent_selector import AgentSelector
-from src.interfaces.console_ui import ConsoleUI
-from src.interfaces.logger import Logger
+from src.ui.console_ui import ConsoleUI
+from src.utils.logger import Logger
 
 
 def main():
-    llm_client = LLMClient()
+    llm_client = LLMClient(backend=OllamaClient())
     agents = {
         'sentinel': Sentinel(llm_client),
         'finguide': FinGuide(llm_client),
@@ -51,7 +52,7 @@ def main():
         response = agent.generate_response(user_input, context)
         conversation_manager.add_message(agent.name, response)
         
-        ui.display(f"{agent.name}: {response}")
+        ui.display(response)
         logger.log('User', user_input)
         logger.log(agent.name, response)
 

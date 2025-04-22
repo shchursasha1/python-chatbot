@@ -1,4 +1,4 @@
-from src.interfaces.logger import Logger
+from src.utils.logger import Logger
 from src.config.prompts import summarizer_prompt
 
 class Summarizer:

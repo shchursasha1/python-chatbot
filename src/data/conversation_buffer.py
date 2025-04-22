@@ -1,9 +1,12 @@
 from src.data.summarizer import Summarizer
+from src.utils.logger import Logger
 from src.utils.input_sanitizer import sanitize_input
 from src.utils.tokenizer import count_tokens
 
 class ConversationBuffer:
-    """Conversation buffer for managing conversation history and summaries."""
+    """Conversation buffer for managing conversation history and summaries.
+    Uses token length rather than number of interactions to determine when to flush interactions.
+    """
 
     _IGNORED_USER_MSGS = frozenset({"ok", "thanks", "hello", "hi"}) # to optimize memory usage
 
