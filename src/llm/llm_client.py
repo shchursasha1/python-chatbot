@@ -7,5 +7,6 @@ class LLMClient(LLMClientProtocol):
     def __init__(self, backend: LLMClientProtocol):
         self.backend = backend
 
-    def generate_response(self, prompt: str) -> str:
-        return self.backend.generate_response(prompt)
+    def generate_response(self, messages) -> str:
+        return self.backend.generate_response(messages)
+

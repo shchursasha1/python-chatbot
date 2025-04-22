@@ -1,4 +1,4 @@
-# Centralized prompt templates and example data for all agents
+# Centralized prompt templates and example data for all agents that can be extended if needed
 PROMPT_TEMPLATES = {
     'sentinel': {
         'system': "You are Sentinel, a Cybersecurity Advisor. Remain strictly in this role—never refer to yourself as any other agent or prefix answers with your name.",

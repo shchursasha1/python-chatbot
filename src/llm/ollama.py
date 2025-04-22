@@ -9,15 +9,11 @@ class OllamaClient(LLMClientProtocol):
     def __init__(self, model="gemma3"):
         self.model = model
 
-    def generate_response(self, user_prompt: str) -> str:
+    def generate_response(self, messages) -> str:
         """
-        Generates a response using both a system prompt (instructions/context) and a user prompt (actual question).
+        Generates a response using a list of messages (system, few-shot, context, user) in OpenAI/Ollama format.
         """
         try:
-            messages = [
-                {'role': 'system', 'content': system_prompt},
-                {'role': 'user', 'content': user_prompt}    
-            ]
             response: ChatResponse = chat(model=self.model, messages=messages)
             return response['message']['content']
         except ResponseError as e:
